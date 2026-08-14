@@ -1,0 +1,15 @@
+{
+  "name": "skill-ai-website",
+  "version": "1.0.0",
+  "description": "เว็บไซต์วิเคราะห์ทักษะการทำงานด้วย AI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^5.1.0",
+    "groq-sdk": "^1.5.0",
+    "openai": "^5.0.0"
+  }
+}
