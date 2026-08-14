@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ระบบวิเคราะห์ทักษะการทำงานด้วย AI เเละหาสถานที่ ที่เหมาะสม</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                "Tahoma",
+                sans-serif;
+
+            background: #f1f5f9;
+
+            color: #1e293b;
+
+        }
+
+
+        .container {
+
+            width: 90%;
+
+            max-width: 850px;
+
+            margin: 40px auto;
+
+        }
+
+
+        .card {
+
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 5px 25px rgba(0,0,0,0.08);
+
+        }
+
+
+        h1 {
+
+            margin-top: 0;
+
+            font-size: 28px;
+
+        }
+
+
+        h2 {
+
+            margin-top: 0;
+
+        }
+
+
+        .description {
+
+            font-size: 17px;
+
+            line-height: 1.7;
+
+            color: #475569;
+
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-top: 20px;
+
+            margin-bottom: 8px;
+
+            font-weight: bold;
+
+        }
+
+
+        input,
+        textarea {
+
+            width: 100%;
+
+            padding: 15px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 10px;
+
+            font-size: 17px;
+
+            outline: none;
+
+        }
+
+
+        input:focus,
+        textarea:focus {
+
+            border-color: #2563eb;
+
+        }
+
+
+        textarea {
+
+            min-height: 120px;
+
+            resize: vertical;
+
+        }
+
+
+        button {
+
+            border: none;
+
+            border-radius: 10px;
+
+            padding: 14px 22px;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+        }
+
+
+        .primary-button {
+
+            margin-top: 20px;
+
+            background: #2563eb;
+
+            color: white;
+
+        }
+
+
+        .primary-button:hover {
+
+            background: #1d4ed8;
+
+        }
+
+
+        .next-button {
+
+            margin-top: 25px;
+
+            background: #2563eb;
+
+            color: white;
+
+            width: 100%;
+
+        }
+
+
+        .back-button {
+
+            margin-top: 20px;
+
+            background: #64748b;
+
+            color: white;
+
+        }
+
+
+        .hidden {
+
+            display: none !important;
+
+        }
+
+
+        /* ==========================
+           AI RESULT
+        ========================== */
+
+        .result {
+
+            margin-top: 25px;
+
+            padding: 25px;
+
+            background: #eff6ff;
+
+            border-radius: 15px;
+
+            line-height: 1.8;
+
+        }
+
+
+        .loading {
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            background: #f8fafc;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+        }
+
+
+        .error {
+
+            margin-top: 20px;
+
+            padding: 18px;
+
+            background: #fef2f2;
+
+            color: #dc2626;
+
+            border-radius: 12px;
+
+        }
+
+
+        /* ==========================
+           WORKPLACE
+        ========================== */
+
+        .workplace-card {
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 15px;
+
+            display: flex;
+
+            gap: 20px;
+
+            background: white;
+
+        }
+
+
+        .workplace-icon {
+
+            font-size: 45px;
+
+            width: 65px;
+
+            text-align: center;
+
+        }
+
+
+        .workplace-info {
+
+            flex: 1;
+
+        }
+
+
+        .workplace-info h3 {
+
+            margin-top: 0;
+
+            margin-bottom: 10px;
+
+            font-size: 21px;
+
+        }
+
+
+        .workplace-info p {
+
+            margin: 8px 0;
+
+            line-height: 1.6;
+
+        }
+
+
+        .location {
+
+            color: #dc2626;
+
+            font-weight: bold;
+
+        }
+
+
+        .map {
+
+            margin-top: 12px;
+
+            padding: 15px;
+
+            background: #f8fafc;
+
+            border-radius: 10px;
+
+        }
+
+
+        .pin {
+
+            font-size: 25px;
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .container {
+
+                width: 94%;
+
+                margin: 20px auto;
+
+            }
+
+
+            .card {
+
+                padding: 20px;
+
+            }
+
+
+            h1 {
+
+                font-size: 23px;
+
+            }
+
+
+            .workplace-card {
+
+                flex-direction: column;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =================================================
+         หน้า 1 : กรอกข้อมูล
+    ================================================== -->
+
+    <div id="inputPage" class="card">
+
+        <h1>
+            🧠 วิเคราะห์ทักษะการทำงานด้วย AI
+        </h1>
+
+        <p class="description">
+
+            กรอกข้อมูลของคุณก่อน
+            ระบบจะนำข้อมูลไปวิเคราะห์
+            และแนะนำงานที่มีแนวโน้มเหมาะสม
+
+        </p>
+
+
+        <label>
+            ชื่อ
+        </label>
+
+        <input
+            type="text"
+            id="name"
+            placeholder="กรอกชื่อของคุณ">
+
+
+        <label>
+            อายุ
+        </label>
+
+        <input
+            type="number"
+            id="age"
+            placeholder="กรอกอายุ">
+
+
+        <label>
+            ข้อมูลเพิ่มเติม
+        </label>
+
+        <textarea
+            id="information"
+            placeholder="เช่น เคยทำงานร้านอาหาร ชอบทำงานกลางแจ้ง ฯลฯ"></textarea>
+
+
+        <button
+            class="primary-button"
+            onclick="showDisplayPage()">
+
+            ดำเนินการต่อ →
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =================================================
+         หน้า 2 : แสดงข้อมูล + วิเคราะห์ทักษะ
+    ================================================== -->
+
+    <div id="displayPage"
+         class="card hidden">
+
+        <h1>
+            📋 ข้อมูลของคุณ
+        </h1>
+
+
+        <div id="userInformation"></div>
+
+
+        <hr style="margin:25px 0;">
+
+
+        <h2>
+            💼 ทักษะการทำงาน
+        </h2>
+
+
+        <p class="description">
+
+            กรอกทักษะของคุณ เช่น
+            แข็งแรง, สื่อสารเก่ง,
+            ใช้คอมพิวเตอร์เก่ง,
+            ทำอาหารเก่ง เป็นต้น
+
+        </p>
+
+
+        <textarea
+            id="skill"
+            placeholder="กรอกทักษะของคุณ"></textarea>
+
+
+        <button
+            class="primary-button"
+            onclick="analyzeSkill()">
+
+            ✨ วิเคราะห์ด้วย AI
+
+        </button>
+
+
+        <div id="aiResult"></div>
+
+
+        <button
+            class="back-button"
+            onclick="backToInput()">
+
+            ← กรอกข้อมูลใหม่
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =================================================
+         หน้า 3 : สถานที่ทำงาน
+    ================================================== -->
+
+    <div id="workplacePage"
+         class="card hidden">
+
+        <h1>
+            📍 สถานที่ทำงานที่น่าสนใจ
+        </h1>
+
+
+        <p class="description">
+
+            ตัวอย่างสถานที่ทำงานที่อาจเหมาะกับคุณ
+            พร้อมตำแหน่งที่ตั้ง
+
+        </p>
+
+
+        <!-- สถานที่ 1 -->
+
+        <div class="workplace-card">
+
+            <div class="workplace-icon">
+                🍜
+            </div>
+
+
+            <div class="workplace-info">
+
+                <h3>
+                    ร้านอาหารป่า
+                </h3>
+
+                <p class="location">
+                    📍 ที่ตั้ง: ใกล้วัดป่า
+                </p>
+
+                <p>
+                    🏢 ประเภทงาน:
+                    ร้านอาหาร
+                </p>
+
+                <p>
+                    💼 ตำแหน่งที่น่าสนใจ:
+                    ผู้ช่วยครัว / พนักงานร้าน
+                </p>
+
+
+                <div class="map">
+
+                    <span class="pin">
+                        📍
+                    </span>
+
+                    ร้านอาหารป่า
+                    <br>
+
+                    ใกล้วัดป่า
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- สถานที่ 2 -->
+
+        <div class="workplace-card">
+
+            <div class="workplace-icon">
+                🏗️
+            </div>
+
+
+            <div class="workplace-info">
+
+                <h3>
+                    บริษัทก่อสร้าง
+                </h3>
+
+                <p class="location">
+                    📍 ที่ตั้ง: ใกล้ตลาดชุมชน
+                </p>
+
+                <p>
+                    🏢 ประเภทงาน:
+                    งานก่อสร้าง
+                </p>
+
+                <p>
+                    💼 ตำแหน่งที่น่าสนใจ:
+                    ผู้ช่วยช่าง / คนงานก่อสร้าง
+                </p>
+
+
+                <div class="map">
+
+                    <span class="pin">
+                        📍
+                    </span>
+
+                    บริษัทก่อสร้าง
+                    <br>
+
+                    ใกล้ตลาดชุมชน
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- สถานที่ 3 -->
+
+        <div class="workplace-card">
+
+            <div class="workplace-icon">
+                📦
+            </div>
+
+
+            <div class="workplace-info">
+
+                <h3>
+                    คลังสินค้า
+                </h3>
+
+                <p class="location">
+                    📍 ที่ตั้ง: ใกล้สถานีขนส่ง
+                </p>
+
+                <p>
+                    🏢 ประเภทงาน:
+                    คลังสินค้า
+                </p>
+
+                <p>
+                    💼 ตำแหน่งที่น่าสนใจ:
+                    พนักงานคลังสินค้า / จัดส่ง
+                </p>
+
+
+                <div class="map">
+
+                    <span class="pin">
+                        📍
+                    </span>
+
+                    คลังสินค้า
+                    <br>
+
+                    ใกล้สถานีขนส่ง
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="back-button"
+            onclick="backToAI()">
+
+            ← กลับไปดูผล AI
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+    // =================================================
+    // หน้า 1 → หน้า 2
+    // =================================================
+
+    function showDisplayPage() {
+
+
+        const name =
+            document.getElementById("name")
+                .value.trim();
+
+
+        const age =
+            document.getElementById("age")
+                .value.trim();
+
+
+        const information =
+            document.getElementById("information")
+                .value.trim();
+
+
+        if (!name) {
+
+            alert("กรุณากรอกชื่อ");
+
+            return;
+
+        }
+
+
+        document
+            .getElementById("inputPage")
+            .classList
+            .add("hidden");
+
+
+        document
+            .getElementById("displayPage")
+            .classList
+            .remove("hidden");
+
+
+        document
+            .getElementById("userInformation")
+            .innerHTML = `
+
+                <p>
+                    <b>👤 ชื่อ:</b>
+                    ${escapeHTML(name)}
+                </p>
+
+                <p>
+                    <b>🎂 อายุ:</b>
+                    ${escapeHTML(age || "-")}
+                </p>
+
+                <p>
+                    <b>📝 ข้อมูลเพิ่มเติม:</b>
+                    ${escapeHTML(information || "-")}
+                </p>
+
+        `;
+
+    }
+
+
+
+    // =================================================
+    // วิเคราะห์ทักษะด้วย Groq
+    // =================================================
+
+    async function analyzeSkill() {
+
+
+        const skill =
+            document.getElementById("skill")
+                .value.trim();
+
+
+        if (!skill) {
+
+            alert("กรุณากรอกทักษะก่อน");
+
+            return;
+
+        }
+
+
+        const result =
+            document.getElementById("aiResult");
+
+
+        result.innerHTML = `
+
+            <div class="loading">
+
+                🤖 AI กำลังวิเคราะห์...
+                <br><br>
+                กรุณารอสักครู่
+
+            </div>
+
+        `;
+
+
+        try {
+
+
+            const response =
+                await fetch(
+                    "/api/analyze-skill",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body: JSON.stringify({
+
+                            skill: skill
+
+                        })
+
+                    }
+                );
+
+
+            const text =
+                await response.text();
+
+
+            if (!text) {
+
+                throw new Error(
+                    "เซิร์ฟเวอร์ไม่ได้ส่งข้อมูลกลับมา"
+                );
+
+            }
+
+
+            let data;
+
+
+            try {
+
+                data =
+                    JSON.parse(text);
+
+            } catch {
+
+                throw new Error(
+                    "เซิร์ฟเวอร์ส่งข้อมูลไม่ถูกต้อง"
+                );
+
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    "เกิดข้อผิดพลาดจาก AI"
+                );
+
+            }
+
+
+            result.innerHTML = `
+
+                <div class="result">
+
+                    <b>
+                        💡 ผลการวิเคราะห์จาก AI
+                    </b>
+
+                    <br><br>
+
+                    ${escapeHTML(
+                        data.answer
+                    ).replace(
+                        /\n/g,
+                        "<br>"
+                    )}
+
+
+                    <button
+                        class="next-button"
+                        onclick="showWorkplacePage()">
+
+                        📍 สถานที่ทำงานที่น่าสนใจ →
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+        } catch (error) {
+
+
+            console.error(error);
+
+
+            result.innerHTML = `
+
+                <div class="error">
+
+                    ❌ ${escapeHTML(
+                        error.message
+                    )}
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+
+    // =================================================
+    // ไปหน้าสถานที่ทำงาน
+    // =================================================
+
+    function showWorkplacePage() {
+
+
+        document
+            .getElementById("displayPage")
+            .classList
+            .add("hidden");
+
+
+        document
+            .getElementById("workplacePage")
+            .classList
+            .remove("hidden");
+
+    }
+
+
+
+    // =================================================
+    // กลับไปหน้า AI
+    // =================================================
+
+    function backToAI() {
+
+
+        document
+            .getElementById("workplacePage")
+            .classList
+            .add("hidden");
+
+
+        document
+            .getElementById("displayPage")
+            .classList
+            .remove("hidden");
+
+    }
+
+
+
+    // =================================================
+    // กลับไปกรอกข้อมูล
+    // =================================================
+
+    function backToInput() {
+
+
+        document
+            .getElementById("displayPage")
+            .classList
+            .add("hidden");
+
+
+        document
+            .getElementById("inputPage")
+            .classList
+            .remove("hidden");
+
+
+        document
+            .getElementById("aiResult")
+            .innerHTML = "";
+
+    }
+
+
+
+    // =================================================
+    // ป้องกัน HTML Injection
+    // =================================================
+
+    function escapeHTML(text) {
+
+
+        const div =
+            document.createElement("div");
+
+
+        div.textContent =
+            text;
+
+
+        return div.innerHTML;
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
